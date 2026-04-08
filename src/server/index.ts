@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { validateToken } from "../shared/github.js";
 
 import { searchIssuesSchema, handleSearchIssues } from "./tools/search_issues.js";
 import { getIssueDetailSchema, handleGetIssueDetail } from "./tools/get_issue_detail.js";
@@ -10,11 +9,12 @@ import { getContributionGuideSchema, handleGetContributionGuide } from "./tools/
 import { getHintsSchema, handleGetHints } from "./tools/get_hints.js";
 
 async function main() {
-  // Validate GitHub token on startup
-  try {
-    await validateToken();
-  } catch (err) {
-    process.stderr.write(`${err instanceof Error ? err.message : String(err)}\n`);
+  // Check token exists at startup (no HTTP call — tools handle API errors themselves)
+  if (!process.env.GITHUB_TOKEN) {
+    process.stderr.write(
+      "❌ FindUnderstandFix requires GITHUB_TOKEN.\n" +
+      "Add it to your MCP config env: https://github.com/settings/tokens\n"
+    );
     process.exit(1);
   }
 
