@@ -1,0 +1,28 @@
+{
+  "name": "findunderstandfix",
+  "version": "1.0.0",
+  "description": "Find it. Understand it. Fix it. — MCP server for discovering GitHub issues and guiding open source contributions",
+  "type": "module",
+  "main": "dist/server/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server/index.js",
+    "dev": "tsc --watch"
+  },
+  "bin": {
+    "findissues": "dist/server/index.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.36.3",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "node-cache": "^5.1.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/node-cache": "^4.2.5",
+    "typescript": "^5.6.3"
+  },
+  "keywords": ["mcp", "github", "open-source", "issues", "contributions"],
+  "license": "MIT"
+}
