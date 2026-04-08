@@ -1,33 +1,33 @@
 # FindUnderstandFix
 
-> **Find it. Understand it. Fix it.**
+> **Encuéntrala. Entiéndela. Resuélvela.**
 
-MCP server that connects directly to Claude to help developers discover open GitHub issues and guide them through making their first open source contribution.
-
----
-
-## What is this?
-
-FindUnderstandFix is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server. Once installed, Claude gains 5 new tools it can use automatically when you talk to it naturally — no commands to memorize.
-
-**Who is it for?** Developers of any level who want to start contributing to open source but don't know where to begin.
-
-**Languages supported:** English, Spanish, Portuguese, Italian
+Servidor MCP que se conecta directamente a Claude para ayudar a los desarrolladores a descubrir issues abiertas en GitHub y guiarlos en su primera contribución a proyectos open source.
 
 ---
 
-## Requirements
+## ¿Qué es esto?
 
-- Node.js v20 or higher — [nodejs.org](https://nodejs.org)
-- A GitHub account with a Personal Access Token
-- Claude Desktop or Claude Code
-- (Optional) Anthropic API key — only needed for `explain_issue` and `get_hints`
+FindUnderstandFix es un servidor [Model Context Protocol (MCP)](https://modelcontextprotocol.io). Una vez instalado, Claude obtiene 5 nuevas herramientas que puede usar automáticamente cuando le hablas de forma natural — no hay comandos que memorizar.
+
+**¿Para quién es?** Desarrolladores de cualquier nivel que quieren empezar a contribuir a proyectos open source pero no saben por dónde comenzar.
+
+**Idiomas disponibles:** Inglés, Español, Portugués, Italiano
 
 ---
 
-## Installation
+## Requisitos
 
-### Option A — Automatic installer (recommended)
+- Node.js v20 o superior — [nodejs.org](https://nodejs.org)
+- Una cuenta de GitHub con un Personal Access Token
+- Claude Desktop o Claude Code
+- (Opcional) Anthropic API key — solo necesaria para `explain_issue` y `get_hints`
+
+---
+
+## Instalación
+
+### Opción A — Instalador automático (recomendado)
 
 **Windows:**
 ```powershell
@@ -40,182 +40,182 @@ chmod +x install.sh
 ./install.sh
 ```
 
-The installer will:
-1. Check Node.js v20+
-2. Run `npm install` and `npm run build`
-3. Ask for your `GITHUB_TOKEN` (required) and `ANTHROPIC_API_KEY` (optional)
-4. Automatically update your Claude Desktop and/or Claude Code configuration
-5. Show usage examples
+El instalador realiza lo siguiente:
+1. Verifica Node.js v20+
+2. Ejecuta `npm install` y `npm run build`
+3. Solicita el `GITHUB_TOKEN` (requerido) y `ANTHROPIC_API_KEY` (opcional)
+4. Actualiza automáticamente la configuración de Claude Desktop y/o Claude Code
+5. Muestra ejemplos de uso
 
 ---
 
-### Option B — Manual installation
+### Opción B — Instalación manual
 
-**Step 1 — Clone and build**
+**Paso 1 — Clonar y compilar**
 ```bash
-git clone https://github.com/your-username/FindUnderstandFix.git
+git clone https://github.com/devch-tech/FindUnderstandFix.git
 cd FindUnderstandFix
 npm install
 npm run build
 ```
 
-**Step 2 — Get a GitHub token**
+**Paso 2 — Obtener un token de GitHub**
 
-1. Go to [github.com/settings/tokens](https://github.com/settings/tokens)
-2. Click **"Generate new token (classic)"**
-3. Select scope: `public_repo`
-4. Copy the token (starts with `ghp_`)
+1. Ve a [github.com/settings/tokens](https://github.com/settings/tokens)
+2. Haz clic en **"Generate new token (classic)"**
+3. Selecciona el alcance: `public_repo`
+4. Copia el token (comienza con `ghp_`)
 
-**Step 3 — Configure Claude Code**
+**Paso 3 — Configurar Claude Code**
 
-Add this to `~/.claude/settings.json` (create it if it doesn't exist):
+Agrega esto a `~/.claude/settings.json` (créalo si no existe):
 
 ```json
 {
   "mcpServers": {
     "findunderstandfix": {
       "command": "node",
-      "args": ["/absolute/path/to/FindUnderstandFix/dist/server/index.js"],
+      "args": ["/ruta/absoluta/a/FindUnderstandFix/dist/server/index.js"],
       "env": {
-        "GITHUB_TOKEN": "ghp_your_token_here",
-        "ANTHROPIC_API_KEY": "sk-ant-your_key_here"
+        "GITHUB_TOKEN": "ghp_tu_token_aqui",
+        "ANTHROPIC_API_KEY": "sk-ant-tu_clave_aqui"
       }
     }
   }
 }
 ```
 
-**Step 4 — Configure Claude Desktop** (if you use it)
+**Paso 4 — Configurar Claude Desktop** (si lo usas)
 
-Add the same block to:
+Agrega el mismo bloque en:
 - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
-**Step 5 — Restart Claude**
+**Paso 5 — Reiniciar Claude**
 
-Close and reopen Claude Desktop or Claude Code. The server loads on startup.
-
----
-
-## Environment variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `GITHUB_TOKEN` | **Yes** | GitHub Personal Access Token. Without it the server won't start. |
-| `ANTHROPIC_API_KEY` | No | Needed for `explain_issue` and `get_hints`. Without it those two tools return an error. |
-| `ISSUESCOUT_DEFAULT_LANG` | No | Default response language: `en`, `es`, `pt`, or `it`. Defaults to `en`. |
+Cierra y vuelve a abrir Claude Desktop o Claude Code. El servidor se carga al iniciar.
 
 ---
 
-## Tools reference
+## Variables de entorno
 
-FindUnderstandFix registers 5 tools in Claude. You never call them directly — Claude calls them based on what you say.
+| Variable | Requerida | Descripción |
+|----------|-----------|-------------|
+| `GITHUB_TOKEN` | **Sí** | Personal Access Token de GitHub. Sin él el servidor no arranca. |
+| `ANTHROPIC_API_KEY` | No | Necesaria para `explain_issue` y `get_hints`. Sin ella esas dos herramientas devuelven un error. |
+| `ISSUESCOUT_DEFAULT_LANG` | No | Idioma de respuesta por defecto: `en`, `es`, `pt` o `it`. Por defecto es `en`. |
+
+---
+
+## Referencia de herramientas
+
+FindUnderstandFix registra 5 herramientas en Claude. No las llamas directamente — Claude las invoca según lo que le dices.
 
 ---
 
 ### `search_issues`
 
-Searches open GitHub issues filtered by programming language, difficulty, and type.
+Busca issues abiertas en GitHub filtradas por lenguaje de programación, dificultad y tipo.
 
-**Parameters:**
+**Parámetros:**
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `language` | string | — | Programming language: `python`, `javascript`, `rust`, `go`, `java`, `typescript`, `cpp`, `csharp`, `c`, `kotlin`, `swift`, `ruby`, `php`, `scala`, `elixir`, `dart`, `shell` |
-| `difficulty` | `any` \| `beginner` \| `intermediate` \| `advanced` | `any` | Filters by GitHub label: beginner → `good first issue`, intermediate → `help wanted` |
-| `type` | `bug` \| `feature` \| `any` | `any` | Filters by label: bug → `bug`, feature → `enhancement` |
-| `limit` | number (1–20) | `10` | Number of results to return |
-| `lang` | `en` \| `es` \| `pt` \| `it` | `en` | Language for the response text |
+| Parámetro | Tipo | Por defecto | Descripción |
+|-----------|------|-------------|-------------|
+| `language` | string | — | Lenguaje de programación: `python`, `javascript`, `rust`, `go`, `java`, `typescript`, `cpp`, `csharp`, `c`, `kotlin`, `swift`, `ruby`, `php`, `scala`, `elixir`, `dart`, `shell` |
+| `difficulty` | `any` \| `beginner` \| `intermediate` \| `advanced` | `any` | Filtra por etiqueta de GitHub: beginner → `good first issue`, intermediate → `help wanted` |
+| `type` | `bug` \| `feature` \| `any` | `any` | Filtra por etiqueta: bug → `bug`, feature → `enhancement` |
+| `limit` | número (1–20) | `10` | Cantidad de resultados a devolver |
+| `lang` | `en` \| `es` \| `pt` \| `it` | `en` | Idioma del texto de respuesta |
 
-**Example output:**
+**Ejemplo de salida:**
 ```
-🔍 Open issues in Python (10 results)
+🔍 Issues abiertas en Python (10 resultados)
 
 1. [Fix memory leak in asyncio event loop] — numpy/numpy
-   📅 2 days ago | ⭐ 24.3k stars | 🏷️ bug, good first issue
+   📅 Hace 2 días | ⭐ 24.3k estrellas | 🏷️ bug, good first issue
    🔗 https://github.com/numpy/numpy/issues/1234
 
 2. [Add support for walrus operator in comprehensions] — pallets/flask
-   📅 5 days ago | ⭐ 67.1k stars | 🏷️ enhancement, help wanted
+   📅 Hace 5 días | ⭐ 67.1k estrellas | 🏷️ enhancement, help wanted
    🔗 https://github.com/pallets/flask/issues/5678
 ```
 
-**How to trigger it:**
+**Cómo activarlo:**
 ```
-"Search for open Python issues for beginners"
-"Show me beginner Rust bugs"
-"Find JavaScript feature requests, answer in Spanish"
-"Search 5 Go issues, intermediate difficulty"
+"Busca issues abiertas en Python para principiantes"
+"Muéstrame bugs de Rust para nivel inicial"
+"Encuentra solicitudes de features en JavaScript, respóndeme en español"
+"Busca 5 issues de Go, dificultad intermedia"
 ```
 
 ---
 
 ### `get_issue_detail`
 
-Fetches the full details of a specific GitHub issue: description, labels, author, comments, and repository information.
+Obtiene el detalle completo de una issue específica de GitHub: descripción, etiquetas, autor, comentarios e información del repositorio.
 
-**Parameters:**
+**Parámetros:**
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `issue_url` | string (URL) | — | Full GitHub issue URL, e.g. `https://github.com/owner/repo/issues/123` |
-| `lang` | `en` \| `es` \| `pt` \| `it` | `en` | Language for labels and metadata |
+| Parámetro | Tipo | Por defecto | Descripción |
+|-----------|------|-------------|-------------|
+| `issue_url` | string (URL) | — | URL completa de la issue en GitHub, ej. `https://github.com/owner/repo/issues/123` |
+| `lang` | `en` \| `es` \| `pt` \| `it` | `en` | Idioma para las etiquetas y metadatos |
 
-**Example output:**
+**Ejemplo de salida:**
 ```
-📋 ISSUE DETAIL
+📋 DETALLE DE ISSUE
 
-Language: Python | ⭐ 24,312 stars
-Repository: numpy/numpy
-A fundamental package for scientific computing with Python
+Lenguaje: Python | ⭐ 24,312 estrellas
+Repositorio: numpy/numpy
+Un paquete fundamental para computación científica con Python
 
 Issue #1234: Fix memory leak in asyncio event loop
-State: Open | Created: 1/12/2026 | Author: @user123
-Labels: bug, good first issue
+Estado: Abierta | Creada: 12/01/2026 | Autor: @user123
+Etiquetas: bug, good first issue
 
-[full issue description here]
+[descripción completa de la issue]
 
-RELEVANT COMMENTS: 3 comments
+COMENTARIOS RELEVANTES: 3 comentarios
 
-@maintainer (2 days ago):
-The problem seems to be in Lib/asyncio/tasks.py around line 380...
+@maintainer (hace 2 días):
+El problema parece estar en Lib/asyncio/tasks.py alrededor de la línea 380...
 
-📖 OFFICIAL CONTRIBUTING GUIDE:
+📖 GUÍA OFICIAL DE CONTRIBUCIÓN:
 https://github.com/numpy/numpy/blob/main/CONTRIBUTING.md
 ```
 
-**How to trigger it:**
+**Cómo activarlo:**
 ```
-"Show me the detail of this issue: https://github.com/owner/repo/issues/123"
-"What is issue #3 about?" (after a search, Claude picks the URL automatically)
-"Get the full info of that issue"
+"Muéstrame el detalle de esta issue: https://github.com/owner/repo/issues/123"
+"¿De qué trata la issue #3?" (después de una búsqueda, Claude toma la URL automáticamente)
+"Obtén la información completa de esa issue"
 ```
 
 ---
 
 ### `explain_issue`
 
-Uses Claude Haiku to generate a clear, structured explanation of a GitHub issue adapted to the developer's experience level.
+Usa Claude Haiku para generar una explicación clara y estructurada de una issue de GitHub, adaptada al nivel de experiencia del desarrollador.
 
-> Requires `ANTHROPIC_API_KEY`
+> Requiere `ANTHROPIC_API_KEY`
 
-**Parameters:**
+**Parámetros:**
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `issue_url` | string (URL) | — | Full GitHub issue URL |
-| `lang` | `en` \| `es` \| `pt` \| `it` | `en` | Language for the explanation |
-| `level` | `beginner` \| `intermediate` \| `advanced` | `intermediate` | Depth and technicality of the explanation |
+| Parámetro | Tipo | Por defecto | Descripción |
+|-----------|------|-------------|-------------|
+| `issue_url` | string (URL) | — | URL completa de la issue en GitHub |
+| `lang` | `en` \| `es` \| `pt` \| `it` | `en` | Idioma de la explicación |
+| `level` | `beginner` \| `intermediate` \| `advanced` | `intermediate` | Profundidad y tecnicidad de la explicación |
 
-**The explanation always covers:**
-1. What is the issue about? (plain language)
-2. Why does it happen? (technical root cause or hypothesis)
-3. What is the impact? (who is affected, severity)
-4. Why is it a good issue to work on? (difficulty, learning value)
+**La explicación siempre cubre:**
+1. ¿De qué trata la issue? (lenguaje accesible)
+2. ¿Por qué ocurre? (causa raíz técnica o hipótesis)
+3. ¿Cuál es el impacto? (quiénes se ven afectados, gravedad)
+4. ¿Por qué es una buena issue para trabajar? (dificultad, valor de aprendizaje)
 
-**Example output (Spanish, intermediate):**
+**Ejemplo de salida (español, nivel intermedio):**
 ```
-🧠 EXPLANATION — Fix memory leak in asyncio event loop
+🧠 EXPLICACIÓN — Fix memory leak in asyncio event loop
 
 ¿De qué se trata?
 Esta issue reporta una pérdida de memoria en el event loop de asyncio cuando
@@ -231,198 +231,199 @@ Afecta aplicaciones de larga duración que crean muchas tareas...
 Está etiquetada como "good first issue". El fix probable es pequeño (< 20 líneas)...
 ```
 
-**How to trigger it:**
+**Cómo activarlo:**
 ```
-"Explain that issue to me"
-"Explain this issue for a beginner: https://github.com/owner/repo/issues/123"
-"What is this issue about, explain it in Portuguese"
-"Explain issue #2 from the list at an advanced level"
+"Explícame esa issue"
+"Explica esta issue para un principiante: https://github.com/owner/repo/issues/123"
+"¿De qué trata esta issue? Explícamela en portugués"
+"Explica la issue #2 de la lista en un nivel avanzado"
 ```
 
 ---
 
 ### `get_contribution_guide`
 
-Generates a step-by-step, personalized guide with exact git commands to contribute to a specific issue. This tool does NOT use an LLM — commands are deterministic and based on real repo data.
+Genera una guía paso a paso y personalizada con comandos git exactos para contribuir a una issue específica. Esta herramienta **no usa un modelo de lenguaje** — los comandos son deterministas y se basan en los datos reales del repositorio.
 
-**Parameters:**
+**Parámetros:**
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `issue_url` | string (URL) | — | Full GitHub issue URL |
-| `lang` | `en` \| `es` \| `pt` \| `it` | `en` | Language for the guide text |
-| `git_username` | string | `YOUR_USERNAME` | Your GitHub username, used to personalize clone/push commands |
+| Parámetro | Tipo | Por defecto | Descripción |
+|-----------|------|-------------|-------------|
+| `issue_url` | string (URL) | — | URL completa de la issue en GitHub |
+| `lang` | `en` \| `es` \| `pt` \| `it` | `en` | Idioma del texto de la guía |
+| `git_username` | string | `YOUR_USERNAME` | Tu nombre de usuario en GitHub, para personalizar los comandos de clonado y push |
 
-**The guide covers 10 steps:**
-1. Fork the repository
-2. Clone your fork
-3. Configure upstream remote
-4. Create a branch (named after the issue number and title)
-5. Install dependencies
-6. Reproduce the problem
-7. Make your changes
-8. Sync with upstream before PR
-9. Push your branch
-10. Open the Pull Request (with link to the correct compare URL)
+**La guía cubre 10 pasos:**
+1. Hacer fork del repositorio
+2. Clonar el fork
+3. Configurar el remote upstream
+4. Crear una rama (con nombre basado en el número y título de la issue)
+5. Instalar dependencias
+6. Reproducir el problema
+7. Hacer los cambios
+8. Sincronizar con upstream antes del PR
+9. Subir la rama
+10. Abrir el Pull Request (con enlace a la URL de comparación correcta)
 
-**Example output:**
+**Ejemplo de salida:**
 ```
-🚀 CONTRIBUTION GUIDE — numpy/numpy
+🚀 GUÍA DE CONTRIBUCIÓN — numpy/numpy
 
-STEP 1 — Fork the repository
-Go to: https://github.com/numpy/numpy
-Click the "Fork" button (top right)
-This creates a copy in your account: github.com/your-username/numpy
+PASO 1 — Fork del repositorio
+Ve a: https://github.com/numpy/numpy
+Haz clic en el botón "Fork" (arriba a la derecha)
+Esto crea una copia en tu cuenta: github.com/tu-usuario/numpy
 
-STEP 2 — Clone your fork
-git clone https://github.com/your-username/numpy.git
+PASO 2 — Clona tu fork
+git clone https://github.com/tu-usuario/numpy.git
 cd numpy
 
-STEP 3 — Configure upstream remote
+PASO 3 — Configura el remote upstream
 git remote add upstream https://github.com/numpy/numpy.git
 git fetch upstream
 
-STEP 4 — Create a branch for your work
+PASO 4 — Crea una rama para tu trabajo
 git checkout -b fix/issue-1234-fix-memory-leak-in-asyncio-event-lo
 
 ...
 
-📖 OFFICIAL CONTRIBUTING GUIDE:
+📖 GUÍA OFICIAL DE CONTRIBUCIÓN:
 https://github.com/numpy/numpy/blob/main/CONTRIBUTING.md
 ```
 
-**How to trigger it:**
+**Cómo activarlo:**
 ```
-"Give me the steps to contribute to that issue"
-"How do I start contributing? My username is devch"
-"Walk me through contributing to https://github.com/owner/repo/issues/123"
-"Dame los pasos para contribuir a esa issue, mi usuario es devch"
+"Dame los pasos para contribuir a esa issue"
+"¿Cómo empiezo a contribuir? Mi usuario es devch"
+"Guíame para contribuir a https://github.com/owner/repo/issues/123"
+"Give me the steps to contribute to that issue, my username is devch"
 ```
 
 ---
 
 ### `get_hints`
 
-Generates escalating hints to help solve an issue without giving away the solution. Uses Claude Haiku.
+Genera pistas escalonadas para ayudar a resolver una issue sin revelar la solución. Usa Claude Haiku.
 
-> Requires `ANTHROPIC_API_KEY`
+> Requiere `ANTHROPIC_API_KEY`
 
-**Parameters:**
+**Parámetros:**
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `issue_url` | string (URL) | — | Full GitHub issue URL |
-| `lang` | `en` \| `es` \| `pt` \| `it` | `en` | Language for the hints |
-| `hint_level` | number (1–3) | `1` | 1 = vague direction, 2 = specific area, 3 = near-solution |
+| Parámetro | Tipo | Por defecto | Descripción |
+|-----------|------|-------------|-------------|
+| `issue_url` | string (URL) | — | URL completa de la issue en GitHub |
+| `lang` | `en` \| `es` \| `pt` \| `it` | `en` | Idioma de las pistas |
+| `hint_level` | número (1–3) | `1` | 1 = dirección general, 2 = área específica, 3 = casi la solución |
 
-**Hint levels:**
-- **Level 1** — General direction: which module or directory to look at
-- **Level 2** — Specific area: file name, relevant function names
-- **Level 3** — Near-solution: what to change conceptually, without writing code
+**Niveles de pista:**
+- **Nivel 1** — Dirección general: en qué módulo o directorio buscar
+- **Nivel 2** — Área específica: nombre del archivo, funciones relevantes
+- **Nivel 3** — Casi la solución: qué cambiar conceptualmente, sin escribir código
 
-**Example output (level 2, Spanish):**
+**Ejemplo de salida (nivel 2, español):**
 ```
-💡 HINTS FOR SOLVING THE ISSUE
+💡 PISTAS PARA RESOLVER LA ISSUE
 
-Hint 1 — Where to look?
-The problem is in the asyncio task management module.
-Look in the Lib/asyncio/ directory, specifically files related to tasks and events.
+Pista 1 — ¿Dónde mirar?
+El problema está en el módulo de gestión de tareas de asyncio.
+Busca en el directorio Lib/asyncio/, específicamente los archivos
+relacionados con tasks y events.
 
-Hint 2 — Which function to review?
-Focus on how callbacks are registered and unregistered.
-Look for methods containing "remove_done_callback" or similar.
-Compare how references are created vs how they are cleaned up.
+Pista 2 — ¿Qué función revisar?
+Enfócate en cómo se registran y desregistran los callbacks.
+Busca métodos que contengan "remove_done_callback" o similares.
+Compara cómo se crean las referencias vs cómo se limpian.
 
-Want hint 3? Ask me "give me hint 3 for this issue".
+¿Quieres la pista 3? Pídeme "dame la pista 3 para esta issue".
 ```
 
-**How to trigger it:**
+**Cómo activarlo:**
 ```
-"Give me a hint to solve that issue"
-"Give me hint 2"
-"I need a more specific hint"
+"Dame una pista para resolver esa issue"
+"Dame la pista 2"
+"Necesito una pista más específica"
 "Dame una pista más concreta para resolver esta issue"
-"Give me the most specific hint (level 3)"
+"Dame la pista más específica (nivel 3)"
 ```
 
 ---
 
-## Full usage flow example
+## Ejemplo de flujo completo
 
 ```
-You: Search for beginner Python issues, answer in Spanish
+Tú: Busca issues de Python para principiantes, respóndeme en español
 
-Claude: [calls search_issues] → shows 10 results
+Claude: [llama a search_issues] → muestra 10 resultados
 
-You: Explain issue #3
+Tú: Explícame la issue #3
 
-Claude: [calls get_issue_detail + explain_issue] → shows full detail and explanation
+Claude: [llama a get_issue_detail + explain_issue] → muestra detalle y explicación
 
-You: Give me the steps to contribute, my username is devch
+Tú: Dame los pasos para contribuir, mi usuario es devch
 
-Claude: [calls get_contribution_guide] → shows 10-step guide with exact git commands
+Claude: [llama a get_contribution_guide] → muestra guía de 10 pasos con comandos git exactos
 
-You: Give me a hint to solve it
+Tú: Dame una pista para resolverla
 
-Claude: [calls get_hints level 1] → shows vague hint
+Claude: [llama a get_hints nivel 1] → muestra pista general
 
-You: Give me a more specific hint
+Tú: Dame una pista más específica
 
-Claude: [calls get_hints level 2] → shows specific hint
+Claude: [llama a get_hints nivel 2] → muestra pista específica
 
-You: One more hint
+Tú: Una pista más
 
-Claude: [calls get_hints level 3] → shows near-solution hint
+Claude: [llama a get_hints nivel 3] → muestra pista casi-solución
 ```
 
 ---
 
-## Supported languages
+## Lenguajes de programación soportados
 
-**Tier 1 (primary):** Java, Python, JavaScript, TypeScript, Go, Rust, C++, C#, C, Kotlin, Swift
+**Nivel 1 (prioritarios):** Java, Python, JavaScript, TypeScript, Go, Rust, C++, C#, C, Kotlin, Swift
 
-**Tier 2 (supported):** Ruby, PHP, Scala, Elixir, Dart, Shell
+**Nivel 2 (soportados):** Ruby, PHP, Scala, Elixir, Dart, Shell
 
-**Aliases accepted:** `c++` → C++, `c#` → C#, `csharp` → C#, `cpp` → C++
-
----
-
-## Caching
-
-Results are cached in memory to avoid hitting GitHub's rate limits:
-
-| Tool | Cache TTL |
-|------|-----------|
-| `search_issues` | 15 minutes |
-| `get_issue_detail` | 30 minutes |
+**Alias aceptados:** `c++` → C++, `c#` → C#, `csharp` → C#, `cpp` → C++
 
 ---
 
-## Error messages
+## Caché
 
-| Situation | What you'll see |
-|-----------|----------------|
-| Missing or invalid `GITHUB_TOKEN` | Instructions to generate a token at github.com/settings/tokens |
-| GitHub rate limit reached | How many seconds until the limit resets |
-| Issue URL not found | "Check that the URL is correct" |
-| Missing `ANTHROPIC_API_KEY` | Explains which tools need it |
-| Unsupported language | Lists all supported languages |
-| No internet connection | "Check your internet connection" |
+Los resultados se guardan en memoria para evitar alcanzar los límites de la API de GitHub:
+
+| Herramienta | Duración del caché |
+|-------------|-------------------|
+| `search_issues` | 15 minutos |
+| `get_issue_detail` | 30 minutos |
 
 ---
 
-## Project structure
+## Mensajes de error
+
+| Situación | Qué verás |
+|-----------|-----------|
+| `GITHUB_TOKEN` faltante o inválido | Instrucciones para generar un token en github.com/settings/tokens |
+| Rate limit de GitHub alcanzado | Cuántos segundos faltan para que se restablezca el límite |
+| URL de issue no encontrada | "Verifica que la URL sea correcta" |
+| `ANTHROPIC_API_KEY` faltante | Explica qué herramientas la requieren |
+| Lenguaje no soportado | Lista todos los lenguajes disponibles |
+| Sin conexión a internet | "Verifica tu conexión a internet" |
+
+---
+
+## Estructura del proyecto
 
 ```
 FindUnderstandFix/
 ├── src/
 │   ├── shared/
-│   │   ├── types.ts          # Shared TypeScript interfaces
-│   │   ├── constants.ts      # Supported languages, aliases, display names
-│   │   ├── i18n.ts           # EN/ES/PT/IT translations + t() helper
-│   │   ├── cache.ts          # In-memory cache with TTL
-│   │   ├── github.ts         # GitHub REST API client
-│   │   └── anthropic.ts      # Claude Haiku client (explain + hints)
+│   │   ├── types.ts          # Interfaces TypeScript compartidas
+│   │   ├── constants.ts      # Lenguajes soportados, alias, nombres de display
+│   │   ├── i18n.ts           # Traducciones EN/ES/PT/IT + helper t()
+│   │   ├── cache.ts          # Caché en memoria con TTL
+│   │   ├── github.ts         # Cliente de la API REST de GitHub
+│   │   └── anthropic.ts      # Cliente de Claude Haiku (explicaciones y pistas)
 │   └── server/
 │       ├── tools/
 │       │   ├── search_issues.ts
@@ -430,10 +431,10 @@ FindUnderstandFix/
 │       │   ├── explain_issue.ts
 │       │   ├── get_contribution_guide.ts
 │       │   └── get_hints.ts
-│       └── index.ts          # MCP server entry point
-├── dist/                     # Compiled output (generated by tsc)
-├── install.ps1               # Windows auto-installer
-├── install.sh                # macOS/Linux auto-installer
+│       └── index.ts          # Punto de entrada del servidor MCP
+├── dist/                     # Código compilado (generado por tsc)
+├── install.ps1               # Instalador automático para Windows
+├── install.sh                # Instalador automático para macOS/Linux
 ├── package.json
 ├── tsconfig.json
 └── .env.example
@@ -441,6 +442,6 @@ FindUnderstandFix/
 
 ---
 
-## License
+## Licencia
 
 MIT
